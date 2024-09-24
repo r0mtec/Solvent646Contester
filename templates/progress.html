@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогресс тестирования</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Прогресс тестирования</h1>
+    <p id="status">Начало тестирования...</p>
+    <div id="progress-bar" style="width: 100%; background-color: #ddd;">
+        <div id="progress" style="width: 0%; height: 30px; background-color: #4CAF50;"></div>
+    </div>
+    <script>
+        function updateProgress(taskID) {
+            $.getJSON(`/progress/${taskID}`, function(data) {
+                var progress = data.progress;
+                $('#progress').css('width', progress + '%');
+                $('#status').text('Выполнено ' + data.current + ' из ' + data.total + ' тестов');
+                
+                if (progress < 100) {
+                    setTimeout(function() {
+                        updateProgress(taskID);
+                    }, 1000);  // Запрашиваем прогресс каждые 1 сек
+                } else {
+                    // Переход на страницу с результатами
+                    window.location.href = `/results/${taskID}`;
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            var taskID = "{{ task_id }}";
+            updateProgress(taskID);
+        });
+    </script>
+</body>
+</html>

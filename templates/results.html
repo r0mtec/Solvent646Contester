@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты тестов</title>
+</head>
+<body>
+    <h1>Результаты тестов</h1>
+    {% for result in results %}
+        <h3>Тест {{ result['test'] }}: {{ result['status'] }}</h3>
+        <p>Время выполнения: {{ result['time'] }} сек</p>
+        <p>Использование памяти: {{ result['memory'] }} МБ</p>
+        {% if result['status'] != "Passed" %}
+            <p>Ожидалось: {{ result['expected'] }}</p>
+            <p>Получено: {{ result['output'] }}</p>
+            <p>Ошибка: {{ result['error'] }}</p>
+        {% endif %}
+        <hr>
+    {% endfor %}
+</body>
+</html>
