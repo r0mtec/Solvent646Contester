@@ -12,8 +12,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 # Настройка логирования
 LOG_FILE = "application.log"
-logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+#logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG,
+#                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
@@ -22,61 +22,61 @@ TEST_FOLDER = './test_cases'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['TEST_FOLDER'] = TEST_FOLDER
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///contest.db'
-db = SQLAlchemy(app)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///contest.db'
+#db = SQLAlchemy(app)
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
+#login_manager = LoginManager()
+#login_manager.init_app(app)
+#login_manager.login_view = 'login'
 
 # Модель пользователя
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
-    submissions = db.relationship('Submission', backref='author', lazy=True)
+#class User(UserMixin, db.Model):
+#    id = db.Column(db.Integer, primary_key=True)
+#    username = db.Column(db.String(150), unique=True, nullable=False)
+#    password = db.Column(db.String(150), nullable=False)
+#    submissions = db.relationship('Submission', backref='author', lazy=True)
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-        new_user = User(username=username, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('login'))
-    return render_template('register.html')
+#@app.route('/register', methods=['GET', 'POST'])
+#def register():
+#    if request.method == 'POST':
+#        username = request.form['username']
+#        password = request.form['password']
+#        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+#        new_user = User(username=username, password=hashed_password)
+#        db.session.add(new_user)
+#        db.session.commit()
+#        return redirect(url_for('login'))
+#    return render_template('register.html')
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password):
-            login_user(user)
-            return redirect(url_for('index'))
-    return render_template('login.html')
+#@app.route('/login', methods=['GET', 'POST'])
+#def login():
+#    if request.method == 'POST':
+#        username = request.form['username']
+#        password = request.form['password']
+#        user = User.query.filter_by(username=username).first()
+#        if user and check_password_hash(user.password, password):
+#            login_user(user)
+#            return redirect(url_for('index'))
+#    return render_template('login.html')
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('index'))
+#@app.route('/logout')
+#@login_required
+#def logout():
+#    logout_user()
+#    return redirect(url_for('index'))
 
 # Модель для отправленных решений
-class Submission(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.Text, nullable=False)
-    language = db.Column(db.String(50), nullable=False)
-    test_result = db.Column(db.String(50), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+#class Submission(db.Model):
+#    id = db.Column(db.Integer, primary_key=True)
+#    code = db.Column(db.Text, nullable=False)
+#    language = db.Column(db.String(50), nullable=False)
+#    test_result = db.Column(db.String(50), nullable=False)
+#    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 # Загрузка пользователя из сессии
-@login_manager.user_loader
-def load_user(user_id):
-    return db.session.get(User, int(user_id))
+#@login_manager.user_loader
+#def load_user(user_id):
+#    return db.session.get(User, int(user_id))
 
 
 
@@ -255,7 +255,6 @@ def index():
 
 
 @app.route('/upload', methods=['POST'])
-@login_required
 def upload_file():
     global progress_status
 
@@ -301,11 +300,11 @@ def upload_file():
     return redirect(url_for('task_status', task_id=task_id))
 
 
-@app.route('/profile')
-@login_required
-def profile():
-    submissions = Submission.query.filter_by(author=current_user).all()
-    return render_template('profile.html', submissions=submissions)
+#@app.route('/profile')
+#@login_required
+#def profile():
+#    submissions = Submission.query.filter_by(author=current_user).all()
+#    return render_template('profile.html', submissions=submissions)
 
 
 @app.route('/status/<task_id>')
@@ -338,7 +337,7 @@ def results(task_id):
 
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()  # Создаем все таблицы
+    #with app.app_context():
+    #    db.create_all()  # Создаем все таблицы
     app.run(debug=True)
 
