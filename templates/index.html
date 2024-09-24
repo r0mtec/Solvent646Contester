@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 20px;
+        }
+        .textarea-container {
+            grid-column: 2;
+        }
+        textarea, select, input[type="file"], button {
+            width: 100%; /* Все элементы занимают 100% ширины родительского контейнера */
+            max-width: 100%; /* Ограничиваем максимальную ширину */
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box; /* Учет полей и отступов внутри элемента */
+        }
+        textarea {
+            height: 20em;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 10px;
+        }
+        label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Добавляем форму -->
+		<label></label>
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+            <div class="textarea-container">
+                <!-- Выпадающий список для выбора задачи -->
+                <label for="task-select">Выберите задачу:</label>
+                <select id="task-select" name="test_file">
+                    <option value="">Выберите задачу</option>
+                    <!-- Динамическое добавление задач без расширения -->
+                    {% for task_file in test_files %}
+                        <option value="{{ task_file }}">{{ task_file }}</option>
+                    {% endfor %}
+                </select>
+
+                <div class="textarea-container">
+                    <!-- Поле для ввода кода -->
+                    <textarea name="code_input" placeholder="Вставьте код"></textarea>
+                </div>
+
+                <div class="grid">
+                    <div>
+                        <label for="file-input">Выберите файл</label>
+                        <!-- Выбор файла -->
+                        <input type="file" id="file-input" name="code_file">
+                    </div>
+                    <div>
+                        <label for="language-select">Выберите язык</label>
+                        <!-- Выпадающий список для выбора языка -->
+                        <select id="language-select" name="language">
+                            <option value="python">Python</option>
+                            <option value="cpp">C++</option>
+                            <option value="java">Java</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Кнопка отправки -->
+                <button type="submit">Отправить</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
